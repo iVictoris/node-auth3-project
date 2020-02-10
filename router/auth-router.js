@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const { add, findByUsername } = require("../data/model/user");
 
 router.route("/register").post(async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, department } = req.body;
 
   if (!username || !password)
     return res.status(400).json({
@@ -27,7 +27,8 @@ router.route("/register").post(async (req, res) => {
 
     const userFromData = {
       username,
-      hashedPassword
+      hashedPassword,
+      department
     };
 
     const user = await add(userFromData);
