@@ -1,6 +1,8 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const { Router } = require("express");
 const router = Router();
-const bcrypt = require("bcryptjs");
+
 const { add, findByUsername } = require("../data/model/user");
 
 router.route("/register").post(async (req, res) => {
@@ -64,13 +66,26 @@ router.route("/login").post(async (req, res) => {
       });
 
     // token generation should go here somewhere
+    const token = generateToken(userFromDb);
 
-    res.status(200).json({ message: "logged in" });
+    res.status(200).json({ message: "logged in", token });
   } catch (e) {
     res.status(500).json({
       message: "Unexpected error retrieving user."
     });
   }
 });
+
+const generateToken = user => {
+  const secret = process.env.JWT_SECRET; // in .env file
+  const payload = {
+    userId: user.id
+  };
+  const options = {
+    expiresIn: "7d"
+  };
+
+  return jwt.sign(payload, secret, options);
+};
 
 module.exports.router = router;
