@@ -1,5 +1,7 @@
 const { Router } = require("express");
 const router = Router();
+const bcrypt = require("bcryptjs");
+const { add, findByUsername } = require("../data/model/user");
 
 router.route("/register").post(async (req, res) => {
   const { username, password } = req.body;
@@ -8,6 +10,33 @@ router.route("/register").post(async (req, res) => {
     return res.status(400).json({
       message: "Missing credentials. Please try again."
     });
+
+  // some validation lib for data goes here ...
+  // hash password
+  const hashedPassword = bcrypt.hashSync(password, 13);
+
+  // add user to db
+  // should check to see if user is not in db
+  try {
+    const userInDb = await findByUsername(username);
+
+    if (userInDb)
+      return res.status(500).json({
+        message: "Invalid information given. Please try again."
+      });
+
+    const userFromData = {
+      username,
+      hashedPassword
+    };
+
+    const user = await add(userFromData);
+    res.status(201).json(user);
+  } catch (e) {
+    res.status(500).json({
+      message: "Unexpected response. Please try again"
+    });
+  }
 });
 
 router.route("/login").post(async (req, res) => {});
