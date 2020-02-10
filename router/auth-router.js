@@ -13,7 +13,7 @@ router.route("/register").post(async (req, res) => {
 
   // some validation lib for data goes here ...
   // hash password
-  const hashedPassword = bcrypt.hashSync(password, 13);
+  const hashedPassword = bcrypt.hashSync(password, 14);
 
   // add user to db
   // should check to see if user is not in db
