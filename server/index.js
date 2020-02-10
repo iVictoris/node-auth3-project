@@ -10,11 +10,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routes go here
+
+app.use("/api/auth", authRouter);
+
 app.use("/", (req, res, next) => {
   console.log("We are working");
   res.status(200).json({ message: "ok" });
 });
-
-app.use("/api/auth", authRouter);
 
 module.exports = app; // default export
