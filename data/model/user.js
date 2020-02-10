@@ -16,7 +16,7 @@ const findByUsername = username => {
 
 const add = async user => {
   const id = await db(table).insert(user);
-  return findById(id);
+  return findById(id[0]);
 };
 
 module.exports = {
