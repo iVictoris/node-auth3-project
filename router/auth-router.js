@@ -40,6 +40,37 @@ router.route("/register").post(async (req, res) => {
   }
 });
 
-router.route("/login").post(async (req, res) => {});
+router.route("/login").post(async (req, res) => {
+  // get username and password from body
+  const { username, password } = req.body;
+  // and check it
+  if (!username || !password)
+    return res.status(400).json({
+      message: "Credentials are missing. Please try again."
+    });
+
+  // get user from db
+  try {
+    const userFromDb = await findByUsername(username).first();
+
+    const isValidCredentials = bcrypt.compareSync(
+      password,
+      userFromDb.password
+    );
+
+    if (!isValidCredentials)
+      return res.status(401).json({
+        message: "Invalid credentials, wrong username or password."
+      });
+
+    // token generation should go here somewhere
+
+    res.status(200).json({ message: "logged in" });
+  } catch (e) {
+    res.status(500).json({
+      message: "Unexpected error retrieving user."
+    });
+  }
+});
 
 module.exports.router = router;
