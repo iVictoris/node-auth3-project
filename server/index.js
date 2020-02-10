@@ -7,6 +7,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routes go here
+app.use("/", (req, res, next) => {
+  console.log("We are working");
+});
 // app.use('/route', router)
 
 module.exports = app; // default export
