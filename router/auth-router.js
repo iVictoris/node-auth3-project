@@ -18,7 +18,7 @@ router.route("/register").post(async (req, res) => {
   // add user to db
   // should check to see if user is not in db
   try {
-    const userInDb = await findByUsername(username);
+    const userInDb = await findByUsername(username).first();
 
     if (userInDb)
       return res.status(500).json({
@@ -27,7 +27,7 @@ router.route("/register").post(async (req, res) => {
 
     const userFromData = {
       username,
-      hashedPassword,
+      password: hashedPassword,
       department
     };
 
@@ -35,7 +35,7 @@ router.route("/register").post(async (req, res) => {
     res.status(201).json(user);
   } catch (e) {
     res.status(500).json({
-      message: "Unexpected response. Please try again"
+      message: "Unexpected response. Please try again" + e
     });
   }
 });
