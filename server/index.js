@@ -9,6 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 // routes go here
 app.use("/", (req, res, next) => {
   console.log("We are working");
+  res.status(200).json({ message: "ok" });
 });
 // app.use('/route', router)
 
